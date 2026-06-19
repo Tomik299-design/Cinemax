@@ -158,18 +158,15 @@ export default async function MovieDetailPage({ params }: Props) {
           </div>
         </div>
 
-        {/* Player section */}
-        {(movie.videoUrl || movie.trailerUrl) && (
-          <div id="player" className="mt-10">
-            <h2 className="text-xl font-bold mb-4">
-              {movie.videoUrl ? "Watch" : "Trailer"}
-            </h2>
-            <MoviePlayer
-              videoUrl={movie.videoUrl || movie.trailerUrl || ""}
-              movieId={movie.id}
-              userId={session?.user?.id}
-            />
-          </div>
+       {/* Player section */}
+<div id="player" className="mt-10">
+  <h2 className="text-xl font-bold mb-4">Watch</h2>
+  <MoviePlayer
+    videoUrl={movie.videoUrl}
+    title={movie.title}
+    posterUrl={movie.posterUrl}
+  />
+</div>
         )}
       </div>
     </div>
