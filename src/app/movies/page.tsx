@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { Navbar } from "@/components/layout/Navbar";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { GenreFilter } from "@/components/ui/GenreFilter";
+import { SortFilter } from "@/components/ui/SortFilter";
 import { MovieGrid } from "@/components/movies/MovieGrid";
 import type { Movie } from "@/types";
 
@@ -59,26 +60,12 @@ export default async function MoviesPage({ searchParams }: Props) {
           <p className="text-muted text-sm">{transformedMovies.length} movies available</p>
         </div>
 
-        {/* Filters bar */}
-        <div className="glass rounded-card p-4 mb-8 flex flex-wrap gap-4 items-center">
-          <SearchBar defaultValue={q} />
-
-          {/* Sort */}
-          <select
-            defaultValue={sort || ""}
-            className="bg-surface border border-border rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-accent"
-            onChange={(e) => {
-              const params = new URLSearchParams(window.location.search);
-              if (e.target.value) params.set("sort", e.target.value);
-              else params.delete("sort");
-              window.location.search = params.toString();
-            }}
-          >
-            <option value="">Latest</option>
-            <option value="rating">Top Rated</option>
-            <option value="views">Most Viewed</option>
-            <option value="year">By Year</option>
-          </select>
+   
+       {/* Filters bar */}
+      <div className="glass rounded-card p-4 mb-8 flex flex-wrap gap-4 items-center">
+       <SearchBar defaultValue={q} />
+       <SortFilter sort={sort} rating={rating} />
+      </div>
 
           {/* Rating filter */}
           <select
