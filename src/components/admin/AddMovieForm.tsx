@@ -12,7 +12,7 @@ interface AddMovieFormProps {
   movieId?: string;
 }
 
-interface MovieFormData {
+export interface MovieFormData {
   tmdbId?: number;
   title: string;
   description: string;

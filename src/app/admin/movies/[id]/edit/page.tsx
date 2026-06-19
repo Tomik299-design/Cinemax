@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { AddMovieForm } from "@/components/admin/AddMovieForm";
+import { AddMovieForm, type MovieFormData } from "@/components/admin/AddMovieForm";
 
 interface Props { params: Promise<{ id: string }> }
 
@@ -16,7 +16,7 @@ export default async function EditMoviePage({ params }: Props) {
 
   if (!movie) notFound();
 
-  const initialData = {
+ const initialData: Partial<MovieFormData> = {
     tmdbId: movie.tmdbId ?? undefined,
     title: movie.title,
     description: movie.description ?? "",
