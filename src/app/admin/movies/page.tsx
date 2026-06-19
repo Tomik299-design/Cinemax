@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-import { Plus, Edit2, Trash2, Eye } from "lucide-react";
+import { Plus, Edit2, Eye } from "lucide-react";
+import { DeleteMovieButton } from "@/components/admin/DeleteMovieButton";
 
 export default async function AdminMoviesPage() {
   const movies = await prisma.movie.findMany({
@@ -97,7 +98,7 @@ export default async function AdminMoviesPage() {
                     >
                       <Edit2 size={14} />
                     </Link>
-                    <DeleteButton movieId={movie.id} />
+                    <DeleteMovieButton movieId={movie.id} />
                   </div>
                 </td>
               </tr>
