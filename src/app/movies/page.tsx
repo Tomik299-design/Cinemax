@@ -60,30 +60,10 @@ export default async function MoviesPage({ searchParams }: Props) {
           <p className="text-muted text-sm">{transformedMovies.length} movies available</p>
         </div>
 
-   
-       {/* Filters bar */}
-      <div className="glass rounded-card p-4 mb-8 flex flex-wrap gap-4 items-center">
-       <SearchBar defaultValue={q} />
-       <SortFilter sort={sort} rating={rating} />
-      </div>
-
-          {/* Rating filter */}
-          <select
-            defaultValue={rating || ""}
-            className="bg-surface border border-border rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-accent"
-            onChange={(e) => {
-              const params = new URLSearchParams(window.location.search);
-              if (e.target.value) params.set("rating", e.target.value);
-              else params.delete("rating");
-              window.location.search = params.toString();
-            }}
-          >
-            <option value="">Any Rating</option>
-            <option value="9">9+ ★</option>
-            <option value="8">8+ ★</option>
-            <option value="7">7+ ★</option>
-            <option value="6">6+ ★</option>
-          </select>
+        {/* Filters bar */}
+        <div className="glass rounded-card p-4 mb-8 flex flex-wrap gap-4 items-center">
+          <SearchBar defaultValue={q} />
+          <SortFilter sort={sort} rating={rating} />
         </div>
 
         {/* Genre pills */}
