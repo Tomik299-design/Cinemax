@@ -1,6 +1,5 @@
 import { prisma } from "./prisma";
-import { AdminAction } from "@prisma/client";
-
+import { AdminAction, Prisma } from "@prisma/client";
 export async function logAdminAction(
   action: AdminAction,
   entity: string,
@@ -9,6 +8,12 @@ export async function logAdminAction(
   details?: Record<string, unknown>
 ) {
   await prisma.adminLog.create({
-    data: { action, entity, adminId, entityId, details },
+    data: {
+      action,
+      entity,
+      adminId,
+      entityId,
+      details: details as Prisma.InputJsonValue | undefined,
+    },
   });
 }
