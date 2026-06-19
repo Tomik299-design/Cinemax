@@ -167,6 +167,7 @@ export default async function MovieDetailPage({ params }: Props) {
             posterUrl={movie.posterUrl}
           />
         </div>
+      </div>
     </div>
   );
 }
