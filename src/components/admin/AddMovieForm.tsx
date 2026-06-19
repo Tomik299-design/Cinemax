@@ -20,9 +20,9 @@ interface MovieFormData {
   backdropUrl: string;
   trailerUrl: string;
   videoUrl: string;
-  releaseYear: number | "";
-  duration: number | "";
-  rating: number | "";
+releaseYear: number | "" | null;
+  duration: number | "" | null;
+  rating: number | "" | null;
   language: string;
   status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
   featured: boolean;
