@@ -1,0 +1,182 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          Role      @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts     Account[]
+  sessions     Session[]
+  favorites    Favorite[]
+  watchHistory WatchHistory[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model Movie {
+  id          String   @id @default(cuid())
+  tmdbId      Int?     @unique
+  title       String
+  originalTitle String?
+  description String?  @db.Text
+  posterUrl   String?
+  backdropUrl String?
+  trailerUrl  String?
+  videoUrl    String?
+  releaseYear Int?
+  duration    Int?     // minutes
+  rating      Float?
+  imdbRating  Float?
+  language    String?
+  country     String?
+  status      MovieStatus @default(DRAFT)
+  featured    Boolean  @default(false)
+  views       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  genres       MovieGenre[]
+  favorites    Favorite[]
+  watchHistory WatchHistory[]
+
+  @@map("movies")
+}
+
+model Genre {
+  id     String @id @default(cuid())
+  name   String @unique
+  tmdbId Int?   @unique
+  slug   String @unique
+
+  movies MovieGenre[]
+
+  @@map("genres")
+}
+
+model MovieGenre {
+  movieId String
+  genreId String
+
+  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  genre Genre @relation(fields: [genreId], references: [id], onDelete: Cascade)
+
+  @@id([movieId, genreId])
+  @@map("movie_genres")
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  movieId   String
+  createdAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, movieId])
+  @@map("favorites")
+}
+
+model WatchHistory {
+  id        String   @id @default(cuid())
+  userId    String
+  movieId   String
+  progress  Float    @default(0) // 0-100 percentage
+  watchedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, movieId])
+  @@map("watch_history")
+}
+
+model AdminLog {
+  id        String      @id @default(cuid())
+  action    AdminAction
+  entity    String
+  entityId  String?
+  details   Json?
+  adminId   String
+  createdAt DateTime    @default(now())
+
+  @@map("admin_logs")
+}
+
+model SiteStats {
+  id        String   @id @default(cuid())
+  date      DateTime @default(now()) @db.Date
+  pageViews Int      @default(0)
+  uniqueVisitors Int @default(0)
+  movieViews Int     @default(0)
+
+  @@unique([date])
+  @@map("site_stats")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum MovieStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum AdminAction {
+  CREATE_MOVIE
+  UPDATE_MOVIE
+  DELETE_MOVIE
+  CREATE_GENRE
+  UPDATE_GENRE
+  DELETE_GENRE
+  USER_ROLE_CHANGE
+}
